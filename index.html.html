@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PractiMate — Herramienta de práctica para Física y Matemáticas</title>
+    <title>PractiMate Pro — Física y Matemáticas Dinámicas</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
         body {
@@ -13,48 +13,18 @@
                 linear-gradient(90deg, rgba(25, 40, 32, 0.3) 1px, transparent 1px);
             background-size: 24px 24px;
         }
-        .panel-dark {
-            background-color: #11221a;
-            border: 1px solid #1c352a;
-        }
-        .input-dark {
-            background-color: #0c1813;
-            border: 1px solid #1a3227;
-            color: #e2e8f0;
-        }
-        .input-dark:focus {
-            border-color: #f2c249;
-            outline: none;
-        }
-        .btn-gold {
-            background-color: #f2c249;
-            color: #11221a;
-        }
-        .btn-gold:hover {
-            background-color: #dbad3b;
-        }
-        .btn-tab-active {
-            border: 1px solid #f2c249;
-            color: #f2c249;
-            background-color: rgba(242, 194, 73, 0.05);
-        }
-        .btn-tab-inactive {
-            border: 1px solid #1c352a;
-            color: #8da297;
-        }
-        .btn-tab-inactive:hover {
-            border-color: #2c4f3f;
-            color: #cbd5e1;
-        }
-        .btn-subtema {
-            border: 1px solid #1c352a;
-            color: #a3b8ad;
-            background-color: rgba(12, 24, 19, 0.5);
-        }
-        .btn-subtema:hover {
-            border-color: #f2c249;
-            color: #f2c249;
-        }
+        .panel-dark { background-color: #11221a; border: 1px solid #1c352a; }
+        .input-dark { background-color: #0c1813; border: 1px solid #1a3227; color: #e2e8f0; }
+        .input-dark:focus { border-color: #f2c249; outline: none; }
+        .btn-gold { background-color: #f2c249; color: #11221a; }
+        .btn-gold:hover { background-color: #dbad3b; }
+        .btn-gold:disabled { background-color: #4a3e1a; color: #6b7c74; cursor: not-allowed; }
+        .btn-tab-active { border: 1px solid #f2c249; color: #f2c249; background-color: rgba(242, 194, 73, 0.05); }
+        .btn-tab-inactive { border: 1px solid #1c352a; color: #8da297; }
+        .btn-tab-inactive:hover { border-color: #2c4f3f; color: #cbd5e1; }
+        .btn-subtema { border: 1px solid #1c352a; color: #a3b8ad; background-color: rgba(12, 24, 19, 0.5); }
+        .btn-subtema:hover { border-color: #f2c249; color: #f2c249; }
+        .select-diff { background-color: #1c352a; color: #f2c249; border: 1px solid #f2c249/30; }
     </style>
 </head>
 <body class="text-slate-200 min-h-screen flex flex-col justify-between font-sans antialiased">
@@ -62,11 +32,9 @@
     <header class="max-w-5xl w-full mx-auto px-4 pt-6 flex justify-between items-center">
         <div class="flex items-center gap-3">
             <div class="bg-[#f2c249]/10 p-2 rounded-xl border border-[#f2c249]/30 flex items-center justify-center">
-                <svg class="w-6 h-6 text-[#f2c249]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 21a3 3 0 003-3v-4.5a3 3 0 00-3-3h-1.5V9a3 3 0 00-3-3h-3V3h1.5a.75.75 0 000-1.5h-9a.75.75 0 000 1.5H9v3H6a3 3 0 00-3 3v4.5H1.5a3 3 0 00-3 3V18a3 3 0 003 3h18zM9 7.5h6v1.5H9V7.5z" />
-                </svg>
+                <span class="text-xl">📐</span>
             </div>
-            <span class="text-xl font-bold tracking-tight text-slate-100">Practi<span class="text-[#f2c249]">Mate</span></span>
+            <span class="text-xl font-bold tracking-tight text-slate-100">Practi<span class="text-[#f2c249]">Mate</span> <span class="text-xs font-normal text-slate-400">v2.1</span></span>
         </div>
         <button onclick="reiniciarSesion()" class="text-xs font-medium text-slate-400 hover:text-slate-200 border border-[#1c352a] px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition bg-[#11221a]/50">
             🔄 Nueva sesión
@@ -78,13 +46,13 @@
         <div id="pantalla-registro" class="panel-dark rounded-2xl p-8 max-w-2xl w-full mx-auto shadow-2xl">
             <div class="flex flex-col items-center text-center mb-8">
                 <span class="text-4xl text-[#f2c249] mb-3">🎓</span>
-                <h2 class="text-2xl font-bold text-slate-100">Registro del estudiante</h2>
-                <p class="text-sm text-slate-400 mt-1">Ingresa tus datos para comenzar la práctica</p>
+                <h2 class="text-2xl font-bold text-slate-100">Registro del Estudiante</h2>
+                <p class="text-sm text-slate-400 mt-1">Configura tu entorno de práctica dirigida</p>
             </div>
 
             <div class="space-y-5">
                 <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Nombre completo</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Nombre Completo</label>
                     <input type="text" id="alumno-nombre" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-medium" placeholder="Ej: Jesús Campos">
                 </div>
                 <div class="grid grid-cols-2 gap-4">
@@ -97,6 +65,14 @@
                         <input type="text" id="alumno-grupo" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-medium" placeholder="Ej: B">
                     </div>
                 </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Nivel de Dificultad Inicial</label>
+                    <select id="alumno-dificultad" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-semibold select-diff">
+                        <option value="Facil">🟢 Fácil (Conceptos Básicos)</option>
+                        <option value="Medio" selected>🟡 Medio (Estándar Académico)</option>
+                        <option value="Dificil">🔴 Difícil (Retos / Olympiada)</option>
+                    </select>
+                </div>
                 <button onclick="procesarRegistro()" class="w-full btn-gold font-bold py-3.5 px-4 rounded-xl transition shadow-lg text-sm cursor-pointer">
                     ➔ Comenzar práctica
                 </button>
@@ -106,14 +82,22 @@
         <div id="pantalla-principal" class="hidden w-full space-y-6">
             
             <div class="w-full bg-[#11221a] border border-[#1c352a] px-5 py-3 rounded-xl flex flex-wrap items-center gap-4 text-sm text-slate-300 justify-between">
-                <div class="flex items-center gap-4">
+                <div class="flex items-center gap-4 flex-wrap">
                     <div class="flex items-center gap-2 text-slate-100 font-semibold">
                         <span class="text-[#f2c249]">👤</span> <span id="lbl-nombre">---</span>
                     </div>
                     <div class="h-4 w-[1px] bg-[#1c352a] hidden sm:block"></div>
                     <div>Grado: <span id="lbl-grado" class="font-bold text-slate-100">---</span></div>
-                    <div class="h-4 w-[1px] bg-[#1c352a] hidden sm:block"></div>
                     <div>Grupo: <span id="lbl-grupo" class="font-bold text-slate-100">---</span></div>
+                    <div class="h-4 w-[1px] bg-[#1c352a] hidden sm:block"></div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-xs text-slate-400">Nivel:</span>
+                        <select id="live-dificultad" onchange="cambiarDificultadLive()" class="bg-[#0c1813] border border-[#1a3227] text-[#f2c249] font-bold text-xs rounded px-2 py-1">
+                            <option value="Facil">Fácil</option>
+                            <option value="Medio">Medio</option>
+                            <option value="Dificil">Difícil</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="flex items-center gap-3 bg-[#0c1813] px-3 py-1.5 rounded-lg border border-[#1a3227] text-xs">
@@ -127,45 +111,45 @@
 
             <div class="flex gap-4">
                 <button id="tab-matematicas" onclick="cambiarMateria('Matematicas')" class="btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm cursor-pointer">
-                    <span>√×</span> Matematicas
+                    <span>√×</span> Matemáticas
                 </button>
                 <button id="tab-fisica" onclick="cambiarMateria('Fisica')" class="btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm cursor-pointer">
-                    <span>⚙</span> Fisica
+                    <span>⚙</span> Física
                 </button>
             </div>
 
             <div id="subtemas-matematicas" class="hidden flex-wrap gap-2">
-                <button onclick="cargarProblema('Ecuaciones cuadraticas')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">𝗫² Ecuaciones cuadraticas</button>
-                <button onclick="cargarProblema('Sistemas lineales')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">⊞ Sistemas lineales</button>
-                <button onclick="cargarProblema('Derivadas')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">📈 Derivadas</button>
+                <button onclick="cargarProblema('Ecuaciones cuadraticas')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">𝗫² Ecuaciones Cuadráticas</button>
+                <button onclick="cargarProblema('Sistemas lineales')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">⊞ Sistemas Lineales 2x2</button>
+                <button onclick="cargarProblema('Derivadas')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">📈 Cálculo: Derivadas</button>
             </div>
 
             <div id="subtemas-fisica" class="hidden flex-wrap gap-2">
-                <button onclick="cargarProblema('MRU')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">🚘 MRU</button>
-                <button onclick="cargarProblema('Ley de Newton')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">🧳 Ley de Newton</button>
-                <button onclick="cargarProblema('Ley de Ohm')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">⚡ Ley de Ohm</button>
+                <button onclick="cargarProblema('MRU')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">🚘 Cinemática: MRU</button>
+                <button onclick="cargarProblema('Ley de Newton')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">🧳 Dinámica: 2da Ley</button>
+                <button onclick="cargarProblema('Ley de Ohm')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">⚡ Electro: Ley de Ohm</button>
             </div>
 
             <div id="espacio-trabajo" class="panel-dark rounded-2xl p-8 min-h-[250px] flex flex-col items-center justify-center text-center">
                 <div id="vista-placeholder" class="space-y-2">
-                    <h3 class="text-lg font-bold text-slate-100">Selecciona un tema</h3>
-                    <p class="text-xs text-slate-400">Elige el área matemática o física para desplegar ejercicios dinámicos.</p>
+                    <h3 class="text-lg font-bold text-slate-100">Selecciona una asignatura y un tema para practicar</h3>
+                    <p class="text-xs text-slate-400">Los ejercicios se adaptarán automáticamente al nivel de dificultad seleccionado.</p>
                 </div>
 
                 <div id="vista-ejercicio" class="hidden w-full text-left space-y-4">
                     <div class="flex justify-between items-center border-b border-[#1c352a] pb-2">
                         <h4 id="txt-titulo-tema" class="text-sm font-bold text-[#f2c249]">Tema</h4>
-                        <span class="text-xs font-semibold text-slate-400 bg-[#0c1813] px-3 py-1 rounded-md border border-[#1a3227]">Ejercicio global N° <span id="txt-num-intento">1</span></span>
+                        <span class="text-xs font-semibold text-slate-400 bg-[#0c1813] px-3 py-1 rounded-md border border-[#1a3227]">Ejercicio N° <span id="txt-num-intento">1</span></span>
                     </div>
-                    <p id="txt-enunciado" class="text-sm text-slate-200 leading-relaxed font-medium">Cargando enunciado...</p>
+                    <p id="txt-enunciado" class="text-sm text-slate-200 leading-relaxed font-medium bg-[#0c1813]/40 p-4 rounded-xl border border-[#1a3227]/50">Cargando enunciado...</p>
                     
                     <div class="space-y-3">
                         <div class="flex gap-3">
-                            <input type="number" id="input-respuesta" step="any" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-semibold" placeholder="Escribe tu resultado aquí">
+                            <input type="number" id="input-respuesta" step="any" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-semibold" placeholder="Ingresa el valor numérico obtenido">
                             <span id="txt-flux-unidad" class="inline-flex items-center px-4 rounded-xl bg-[#0c1813] border border-[#1a3227] text-slate-400 font-bold text-xs uppercase"></span>
                         </div>
-                        <button onclick="evaluar()" class="w-full btn-gold font-bold py-3 rounded-xl transition text-sm cursor-pointer">
-                            ✓ Enviar respuesta
+                        <button id="btn-comprobar" onclick="evaluar()" class="w-full btn-gold font-bold py-3 rounded-xl transition text-sm cursor-pointer">
+                            ✓ Comprobar Resultado
                         </button>
                     </div>
                 </div>
@@ -173,32 +157,32 @@
                 <div id="vista-retro" class="hidden w-full text-left space-y-3 pt-3 border-t border-[#1c352a]">
                     <div id="box-status" class="p-3 rounded-xl font-bold text-xs"></div>
                     <div id="box-pasos" class="bg-[#0c1813] border border-[#1a3227] rounded-xl p-4 space-y-2 text-xs text-slate-300"></div>
-                    <button onclick="avanzarSiguiente()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 rounded-xl transition text-xs">
-                        Siguiente ejercicio ➔
+                    <button id="btn-siguiente" onclick="avanzarSiguiente()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 rounded-xl transition text-xs cursor-pointer">
+                        Siguiente problema aleatorio ➔
                     </button>
                 </div>
             </div>
 
             <div id="panel-reportes" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
                 <div class="panel-dark rounded-xl p-5 space-y-2">
-                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Desglose del Historial</h4>
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Historial Crítico de Intentos</h4>
                     <div class="max-h-40 overflow-y-auto space-y-2" id="lista-historial"></div>
                 </div>
 
                 <div class="panel-dark rounded-xl p-5 flex flex-col items-center justify-center space-y-3">
-                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Finalizar sesión</h4>
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Cierre de Sesión Evaluativa</h4>
                     
                     <button onclick="bajarCSV()" class="w-full bg-[#1c352a] hover:bg-[#254637] text-slate-300 text-xs py-2 rounded-xl border border-[#2b5240] font-medium">
-                        📥 Descargar archivo CSV (Con porcentajes)
+                        📥 Exportar Reporte de Métricas (CSV)
                     </button>
                     
                     <button onclick="generarValeImagen()" class="w-full bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 text-xs py-2 rounded-xl border border-amber-500/40 font-bold">
-                        🖼 Generar vale de aciertos (Imagen)
+                        🖼 Generar Ticket de Acreditación (Imagen)
                     </button>
 
-                    <canvas id="canvas-reporte" width="500" height="340" class="hidden"></canvas>
+                    <canvas id="canvas-reporte" width="520" height="360" class="hidden"></canvas>
                     <div id="box-imagen-salida" class="hidden flex flex-col items-center space-y-2 mt-2">
-                        <p class="text-[10px] text-amber-400 text-center">Deja presionado sobre la imagen para Guardar en Fotos o toma un screenshot:</p>
+                        <p class="text-[10px] text-amber-400 text-center">Mantén presionada la imagen para guardarla en tu dispositivo:</p>
                         <img id="img-resultado" class="border border-amber-500/30 rounded-xl max-w-full h-auto shadow-xl" alt="Ticket de Evidencia">
                     </div>
                 </div>
@@ -207,27 +191,35 @@
     </main>
 
     <footer class="text-center py-4 border-t border-[#13251d] text-xs text-slate-500">
-        PractiMate — Herramienta de práctica para Física y Matemáticas
+        Área de Ciencias Exactas — Unidad Académica Preparatoria Navolato (UAS)
     </footer>
 
     <script>
-        let alumno = { nombre: "", grado: "", grupo: "" };
+        let alumno = { nombre: "", grado: "", grupo: "", dificultad: "Medio" };
         let materiaActual = "", temaActual = "", problemaActual = null;
         let totalIntentos = 1, historial = [];
+        let ultimoErrorEnunciado = "Ninguno"; // Almacena el último error cometido
 
         function procesarRegistro() {
             const nombre = document.getElementById('alumno-nombre').value.trim();
             const grado = document.getElementById('alumno-grado').value.trim();
             const grupo = document.getElementById('alumno-grupo').value.trim();
-            if (!nombre || !grado || !grupo) return alert("Rellena todos los campos.");
+            const dificultad = document.getElementById('alumno-dificultad').value;
+            if (!nombre || !grado || !grupo) return alert("Por favor complete todos los campos de registro.");
             
-            alumno = { nombre, grado, grupo };
+            alumno = { nombre, grado, grupo, dificultad };
             document.getElementById('lbl-nombre').innerText = alumno.nombre;
             document.getElementById('lbl-grado').innerText = alumno.grado;
             document.getElementById('lbl-grupo').innerText = alumno.grupo;
+            document.getElementById('live-dificultad').value = alumno.dificultad;
 
             document.getElementById('pantalla-registro').classList.add('hidden');
             document.getElementById('pantalla-principal').classList.remove('hidden');
+        }
+
+        function cambiarDificultadLive() {
+            alumno.dificultad = document.getElementById('live-dificultad').value;
+            if(temaActual) cargarProblema(temaActual);
         }
 
         function cambiarMateria(materia) {
@@ -252,31 +244,161 @@
         }
 
         const motoresProblemas = {
-            "Ley de Ohm": () => {
-                const r = Math.floor(Math.random() * 30) + 5;
-                const i = Math.floor(Math.random() * 6) + 1;
+            "Ecuaciones cuadraticas": () => {
+                const diff = alumno.dificultad;
+                if (diff === "Facil") {
+                    const r = Math.floor(Math.random() * 10) + 2;
+                    const c = r * r;
+                    return {
+                        enunciado: `Encuentra la raíz POSITIVA de la ecuación cuadrática incompleta pura: x² - ${c} = 0.`,
+                        solucion: r, unidad: "",
+                        retro: { tipo: "matematicas", pasos: [`1. Aislar x²: x² = ${c}`, `2. Aplicar raíz cuadrada en ambos lados: x = √${c}`, `3. Obtener la raíz positiva: x = ${r}`] }
+                    };
+                } else if (diff === "Medio") {
+                    const x1 = Math.floor(Math.random() * 6) + 1;
+                    const x2 = Math.floor(Math.random() * 5) + 7;
+                    const b = -(x1 + x2);
+                    const c = x1 * x2;
+                    return {
+                        enunciado: `Resuelve por factorización la ecuación: x² ${b >= 0 ? '+ ' + b : b}x + ${c} = 0. ¿Cuál es la raíz MAYOR?`,
+                        solucion: x2, unidad: "",
+                        retro: { tipo: "matematicas", pasos: [`1. Buscar números que sumados den ${b} y multiplicados den ${c}.`, `2. La forma factorizada es: (x - ${x1})(x - ${x2}) = 0`, `3. Las raíces son x = ${x1} y x = ${x2}. La mayor es ${x2}.`] }
+                    };
+                } else {
+                    const a = 2;
+                    const x1 = Math.floor(Math.random() * 4) + 1;
+                    const x2 = Math.floor(Math.random() * 4) + 5;
+                    const b = -a * (x1 + x2);
+                    const c = a * x1 * x2;
+                    return {
+                        enunciado: `Aplica la fórmula general para resolver la ecuación: ${a}x² ${b >= 0 ? '+ ' + b : b}x + ${c} = 0. Proporciona el valor de la raíz MAYOR.`,
+                        solucion: x2, unidad: "",
+                        retro: { tipo: "matematicas", pasos: [`1. Identificar coeficientes: a = ${a}, b = ${b}, c = ${c}`, `2. Calcular discriminante (Δ): b² - 4ac = (${b})² - 4(${a})(${c}) = ${b*b - 4*a*c}`, `3. Aplicar fórmula x = (-b ± √Δ) / 2a. Las raíces resultan en x = ${x1} y x = ${x2}.`] }
+                    };
+                }
+            },
+            "Sistemas lineales": () => {
+                const diff = alumno.dificultad;
+                let mult = diff === "Facil" ? 2 : diff === "Medio" ? 5 : 12;
+                const x = Math.floor(Math.random() * mult) + 1;
+                const y = Math.floor(Math.random() * mult) + 2;
+                const a1 = diff === "Facil" ? 1 : 2;
+                const b1 = 1;
+                const r1 = a1 * x + b1 * y;
+                const a2 = 1;
+                const b2 = diff === "Dificil" ? 3 : -1;
+                const r2 = a2 * x + b2 * y;
+
                 return {
-                    enunciado: `Un circuito tiene una resistencia de ${r} Ohmios y una intensidad de corriente de ${i} Amperios. ¿Cuál es el voltaje aplicado?`,
-                    solucion: r * i, unidad: "V",
-                    retro: { tipo: "fisica", datos: `R = ${r} Ω, I = ${i} A`, incognita: `V = ?`, formula: `V = I · R`, sustitucion: `V = ${i} A × ${r} Ω`, resultado: `${r*i} V` }
+                    enunciado: `Resuelve el siguiente sistema de ecuaciones de 2x2:\n\n1) ${a1===1?'':a1}x + y = ${r1}\n2) x ${b2 < 0 ? '- ' + Math.abs(b2) : '+ ' + b2}y = ${r2}\n\nDetermina el valor exacto de la variable 'x'.`,
+                    solucion: x, unidad: "",
+                    retro: { tipo: "matematicas", pasos: [`1. Sistema inicial planteado con coeficientes enteros.`, `2. Utilizando el método de eliminación o sustitución algebraico lineal.`, `3. Resolviendo para las variables se obtiene que de forma única: x = ${x}, y = ${y}.`] }
                 };
+            },
+            "Derivadas": () => {
+                const diff = alumno.dificultad;
+                const c = Math.floor(Math.random() * 8) + 2;
+                const n = diff === "Facil" ? 2 : diff === "Medio" ? 3 : 4;
+                
+                if (diff === "Facil" || diff === "Medio") {
+                    return {
+                        enunciado: `Calcula la derivada analítica f'(x) de la función de potencia elemental f(x) = ${c}x^{${n}}. Evalúa f'(x) cuando x = 2.`,
+                        solucion: c * n * Math.pow(2, n - 1), unidad: "",
+                        retro: { tipo: "matematicas", pasos: [`1. Aplicar regla de la potencia d/dx[cx^n] = c · n · x^(n-1)`, `2. f'(x) = ${c * n}x^{${n - 1}}`, `3. Sustituir x = 2: ${c * n} · (${Math.pow(2, n - 1)}) = ${c * n * Math.pow(2, n - 1)}`] }
+                    };
+                } else {
+                    const f2 = 5;
+                    return {
+                        enunciado: `Calcula la derivada analítica f'(x) para el polinomio compuesto f(x) = ${c}x⁴ + ${f2}x. Evalúa f'(x) en el punto donde x = 2.`,
+                        solucion: (c * 4 * Math.pow(2, 3)) + f2, unidad: "",
+                        retro: { tipo: "matematicas", pasos: [`1. Derivar término a término: f'(x) = 4·${c}x³ + ${f2}`, `2. f'(x) = ${c * 4}x³ + ${f2}`, `3. Sustituir x = 2: ${c * 4}·(8) + ${f2} = ${(c * 4 * 8) + f2}`] }
+                    };
+                }
             },
             "MRU": () => {
-                const v = Math.floor(Math.random() * 20) + 5;
-                const t = Math.floor(Math.random() * 10) + 2;
-                return {
-                    enunciado: `Un cuerpo se desplaza a una velocidad constante de ${v} m/s durante ${t} segundos. Encuentra la distancia total recorrida.`,
-                    solucion: v * t, unidad: "m",
-                    retro: { tipo: "fisica", datos: `v = ${v} m/s, t = ${t} s`, incognita: `d = ?`, formula: `d = v · t`, sustitucion: `d = ${v} m/s × ${t} s`, resultado: `${v*t} m` }
-                };
+                const diff = alumno.dificultad;
+                const rFactor = diff === "Facil" ? 10 : diff === "Medio" ? 15 : 24;
+                const v = Math.floor(Math.random() * rFactor) + 4;
+                const t = Math.floor(Math.random() * 8) + 3;
+                const d = v * t;
+                const opciones = ["d", "v", "t"];
+                const incognita = opciones[Math.floor(Math.random() * opciones.length)];
+
+                if (incognita === "d") {
+                    return {
+                        enunciado: `Un móvil avanza con Movimiento Rectilíneo Uniforme (MRU) manteniendo una velocidad constante de ${v} m/s durante un intervalo de tiempo de ${t} s. Encuentra la distancia total recorrida.`,
+                        solucion: d, unidad: "m",
+                        retro: { tipo: "fisica", datos: `v = ${v} m/s, t = ${t} s`, incognita: `d = ?`, formula: `d = v · t`, sustitucion: `d = ${v} m/s × ${t} s`, resultado: `${d} m` }
+                    };
+                } else if (incognita === "v") {
+                    return {
+                        enunciado: `Un objeto se desplaza a velocidad constante cubriendo una distancia lineal de ${d} metros en un tiempo de ${t} segundos. Determina la velocidad del móvil.`,
+                        solucion: v, unidad: "m/s",
+                        retro: { tipo: "fisica", datos: `d = ${d} m, t = ${t} s`, incognita: `v = ?`, formula: `v = d / t`, sustitucion: `v = ${d} m / ${t} s`, resultado: `${v} m/s` }
+                    };
+                } else {
+                    return {
+                        enunciado: `Un cuerpo se traslada a una velocidad uniforme de ${v} m/s logrando recorrer una distancia neta de ${d} metros. ¿Cuánto tiempo le tomó realizar dicho recorrido?`,
+                        solucion: t, unidad: "s",
+                        retro: { tipo: "fisica", datos: `d = ${d} m, v = ${v} m/s`, incognita: `t = ?`, formula: `t = d / v`, sustitucion: `t = ${d} m / ${v} m/s`, resultado: `${t} s` }
+                    };
+                }
             },
-            "Ecuaciones cuadraticas": () => {
-                const r = Math.floor(Math.random() * 10) + 2;
-                return {
-                    enunciado: `Resuelve para la raíz positiva la siguiente expresión: x² - ${r*r} = 0.`,
-                    solucion: r, unidad: "",
-                    retro: { tipo: "matematicas", pasos: [`1. Pasar término constante: x² = ${r*r}`, `2. Aplicar raíz cuadrada: x = √(${r*r})`, `3. Resultado: x = ${r}`] }
-                };
+            "Ley de Newton": () => {
+                const diff = alumno.dificultad;
+                const m = Math.floor(Math.random() * (diff === "Dificil" ? 50 : 20)) + 3;
+                const a = Math.floor(Math.random() * 6) + 2;
+                const f = m * a;
+                const opciones = ["F", "m", "a"];
+                const incognita = opciones[Math.floor(Math.random() * opciones.length)];
+
+                if (incognita === "F") {
+                    return {
+                        enunciado: `Determina la magnitud de la fuerza neta constante que se requiere aplicar sobre un cuerpo cuya masa es de ${m} kg para imprimirle una aceleración uniforme de ${a} m/s².`,
+                        solucion: f, unidad: "N",
+                        retro: { tipo: "fisica", datos: `m = ${m} kg, a = ${a} m/s²`, incognita: `F = ?`, formula: `F = m · a`, sustitucion: `F = ${m} kg × ${a} m/s²`, resultado: `${f} N` }
+                    };
+                } else if (incognita === "m") {
+                    return {
+                        enunciado: `Una fuerza resultante de ${f} N actúa directamente sobre una masa provocando que esta acelere de forma uniforme a razón de ${a} m/s². Calcula la masa del objeto.`,
+                        solucion: m, unidad: "kg",
+                        retro: { tipo: "fisica", datos: `F = ${f} N, a = ${a} m/s²`, incognita: `m = ?`, formula: `m = F / a`, sustitucion: `m = ${f} N / ${a} m/s²`, resultado: `${m} kg` }
+                    };
+                } else {
+                    return {
+                        enunciado: `Un bloque que posee una masa inercial de ${m} kg es arrastrado por una fuerza neta de ${f} N sobre una superficie horizontal lisa. ¿Cuál es el valor de la aceleración resultante?`,
+                        solucion: a, unidad: "m/s²,",
+                        retro: { tipo: "fisica", datos: `F = ${f} N, m = ${m} kg`, incognita: `a = ?`, formula: `a = F / m`, sustitucion: `a = ${f} N / ${m} kg`, resultado: `${a} m/s²` }
+                    };
+                }
+            },
+            "Ley de Ohm": () => {
+                const diff = alumno.dificultad;
+                const r = Math.floor(Math.random() * (diff === "Dificil" ? 60 : 25)) + 4;
+                const i = Math.floor(Math.random() * 5) + 1;
+                const v = r * i;
+                const opciones = ["V", "R", "I"];
+                const incognita = opciones[Math.floor(Math.random() * opciones.length)];
+
+                if (incognita === "V") {
+                    return {
+                        enunciado: `Un circuito eléctrico cerrado posee una resistencia óhmica interna de ${r} Ω y registra un flujo de corriente de ${i} A. Calcula el potencial o voltaje de la fuente de alimentación.`,
+                        solucion: v, unidad: "V",
+                        retro: { tipo: "fisica", datos: `R = ${r} Ω, I = ${i} A`, incognita: `V = ?`, formula: `V = I · R`, sustitucion: `V = ${i} A × ${r} Ω`, resultado: `${v} V` }
+                    };
+                } else if (incognita === "R") {
+                    return {
+                        enunciado: `Se conecta un componente a una diferencia de potencial de ${v} V midiéndose una intensidad de corriente eléctrica de ${i} A en el circuito. Encuentra el valor óhmico de la resistencia.`,
+                        solucion: r, unidad: "Ω",
+                        retro: { tipo: "fisica", datos: `V = ${v} V, I = ${i} A`, incognita: `R = ?`, formula: `R = V / I`, sustitucion: `R = ${v} V / ${i} A`, resultado: `${r} Ω` }
+                    };
+                } else {
+                    return {
+                        enunciado: `Un calentador eléctrico cuya resistencia medida es de ${r} Ω es alimentado mediante una red eléctrica con una tensión de ${v} V. Determina la intensidad de corriente que circula.`,
+                        solucion: i, unidad: "A",
+                        retro: { tipo: "fisica", datos: `V = ${v} V, R = ${r} Ω`, incognita: `I = ?`, formula: `I = V / R`, sustitucion: `I = ${v} V / ${r} Ω`, resultado: `${i} A` }
+                    };
+                }
             }
         };
 
@@ -285,32 +407,43 @@
             document.getElementById('vista-placeholder').classList.add('hidden');
             document.getElementById('vista-retro').classList.add('hidden');
             
-            const motor = motoresProblemas[tema] || (() => {
-                const a = Math.floor(Math.random() * 10) + 1;
-                return { enunciado: `Calcular k para k - ${a} = 10.`, solucion: a + 10, unidad: "", retro: { tipo: "matematicas", pasos: [`Sumar para despejar de forma lineal: ${a+10}`] } };
-            });
-
+            const motor = motoresProblemas[tema];
             problemaActual = motor();
-            document.getElementById('txt-titulo-tema').innerText = `${materiaActual} — ${temaActual}`;
+            
+            document.getElementById('txt-titulo-tema').innerText = `${materiaActual} — ${temaActual} [Nivel ${alumno.dificultad}]`;
             document.getElementById('txt-enunciado').innerText = problemaActual.enunciado;
             document.getElementById('txt-flux-unidad').innerText = problemaActual.unidad;
             document.getElementById('txt-num-intento').innerText = totalIntentos;
             document.getElementById('input-respuesta').value = "";
+            document.getElementById('input-respuesta').disabled = false;
+            
+            // HABILITAR botón de comprobar para el nuevo ejercicio
+            document.getElementById('btn-comprobar').disabled = false;
             document.getElementById('vista-ejercicio').classList.remove('hidden');
         }
 
         function evaluar() {
             const rawIn = document.getElementById('input-respuesta').value;
-            if(!rawIn) return alert("Introduce un valor numérico.");
+            if(!rawIn) return alert("Por favor, ingrese un valor de respuesta válido.");
+            
+            // MEJORA: DESHABILITAR botón de comprobar e input de inmediato (Evita envíos repetidos)
+            document.getElementById('btn-comprobar').disabled = true;
+            document.getElementById('input-respuesta').disabled = true;
+
             const respUser = parseFloat(rawIn);
             const val = Math.abs(respUser - problemaActual.solucion) <= 0.05;
 
+            // Si es incorrecto, guardamos el enunciado del ejercicio del error
+            if(!val) {
+                ultimoErrorEnunciado = `[${temaActual}] ${problemaActual.enunciado}`;
+            }
+
             historial.push({
-                intento: totalIntentos, materia: materiaActual, tema: temaActual,
-                status: val ? "CORRECTO" : "INCORRECTO", uRes: respUser, cRes: problemaActual.solucion
+                intento: totalIntentos, materia: materiaActual, tema: temaActual, dificultad: alumno.dificultad,
+                status: val ? "CORRECTO" : "INCORRECTO", uRes: respUser, cRes: problemaActual.solucion,
+                enunciadoFallo: !val ? problemaActual.enunciado : ""
             });
 
-            // Actualizar Métricas en Tiempo Real (Panel Superior)
             actualizarMetricasLive();
             actualizarHistorialUI();
             document.getElementById('panel-reportes').classList.remove('hidden');
@@ -319,24 +452,24 @@
             const pasosBox = document.getElementById('box-pasos');
 
             if(val) {
-                statusBox.className = "bg-emerald-950/50 border border-emerald-800/40 text-emerald-400 p-3 rounded-xl font-bold";
-                statusBox.innerHTML = "✔ ¡Correcto!";
-                pasosBox.innerHTML = "<p class='text-slate-500'>Procedimiento óptimo.</p>";
+                statusBox.className = "bg-emerald-950/50 border border-emerald-800/40 text-emerald-400 p-3 rounded-xl font-bold text-center";
+                statusBox.innerHTML = "✔ ¡Respuesta Correcta! Excelente procedimiento.";
+                pasosBox.innerHTML = "<p class='text-slate-500 text-center'>El desarrollo algebraico coincide perfectamente.</p>";
             } else {
                 statusBox.className = "bg-rose-950/50 border border-rose-800/40 text-rose-400 p-3 rounded-xl font-bold";
-                statusBox.innerHTML = `❌ Incorrecto (Tu respuesta: ${respUser})`;
+                statusBox.innerHTML = `❌ Incorrecto (Tu respuesta: ${respUser}). Analiza el siguiente procedimiento guiado:`;
                 
                 if(problemaActual.retro.tipo === "fisica") {
                     pasosBox.innerHTML = `
-                        <div class='space-y-1'>
-                            <div><b>Datos:</b> ${problemaActual.retro.datos}</div>
-                            <div><b>Incógnita:</b> ${problemaActual.retro.incognita}</div>
-                            <div><b>Fórmula:</b> ${problemaActual.retro.formula}</div>
-                            <div><b>Sustitución:</b> ${problemaActual.retro.sustitucion}</div>
-                            <div class='text-emerald-400'><b>Resultado:</b> ${problemaActual.retro.resultado}</div>
+                        <div class='space-y-1 font-mono text-[11px]'>
+                            <div><b>Datos identificados:</b> ${problemaActual.retro.datos}</div>
+                            <div><b>Incógnita a despejar:</b> ${problemaActual.retro.incognita}</div>
+                            <div><b>Modelo Matemático:</b> ${problemaActual.retro.formula}</div>
+                            <div><b>Sustitución Numérica:</b> ${problemaActual.retro.sustitucion}</div>
+                            <div class='text-emerald-400 font-bold'><b>Resultado Teórico Exacto:</b> ${problemaActual.retro.resultado}</div>
                         </div>`;
                 } else {
-                    pasosBox.innerHTML = problemaActual.retro.pasos.map(p => `<p>${p}</p>`).join("");
+                    pasosBox.innerHTML = problemaActual.retro.pasos.map(p => `<p class='font-mono text-[11px]'>${p}</p>`).join("");
                 }
             }
             document.getElementById('vista-retro').classList.remove('hidden');
@@ -361,8 +494,8 @@
             container.innerHTML = "";
             [...historial].reverse().forEach(h => {
                 container.innerHTML += `
-                    <div class="flex justify-between items-center text-xs p-2 rounded-lg bg-[#0c1813] border border-[#1a3227]">
-                        <span class="text-slate-400">Examen #${h.intento} - ${h.tema}</span>
+                    <div class="flex justify-between items-center text-[11px] p-2 rounded-lg bg-[#0c1813] border border-[#1a3227]">
+                        <span class="text-slate-400">[${h.materia.substring(0,3)}] ${h.tema} (${h.dificultad})</span>
                         <span class="${h.status==='CORRECTO'?'text-emerald-400':'text-rose-400'} font-bold">${h.status}</span>
                     </div>`;
             });
@@ -385,44 +518,41 @@
             ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
 
             ctx.fillStyle = "#f2c249";
-            ctx.font = "bold 20px Arial";
-            ctx.fillText("PRACTIMATE — VALE DE EVALUACIÓN", 25, 45);
+            ctx.font = "bold 18px Arial";
+            ctx.fillText("UAS — VALE DE CONTROL DE APRENDIZAJE", 25, 45);
 
             ctx.fillStyle = "#8da297";
-            ctx.font = "12px Arial";
-            ctx.fillText(`Emisión: ${timestamp}`, 25, 70);
+            ctx.font = "11px Arial";
+            ctx.fillText(`Generado el: ${timestamp} | Unidad Académica Navolato`, 25, 70);
 
             ctx.strokeStyle = "#1c352a";
             ctx.lineWidth = 1;
-            ctx.beginPath(); ctx.moveTo(25, 85); ctx.lineTo(475, 85); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(25, 85); ctx.lineTo(495, 85); ctx.stroke();
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "bold 15px Arial";
+            ctx.font = "bold 13px Arial";
             ctx.fillText(`Estudiante: ${alumno.nombre}`, 25, 115);
-            ctx.fillText(`Grado: ${alumno.grado}`, 25, 145);
-            ctx.fillText(`Grupo: ${alumno.grupo}`, 160, 145);
+            ctx.fillText(`Grado: ${alumno.grado}`, 25, 140);
+            ctx.fillText(`Grupo: ${alumno.grupo}`, 150, 140);
 
-            // Bloque de Métricas Completo en el Canvas
-            ctx.fillStyle = "rgba(242, 194, 73, 0.08)";
-            ctx.fillRect(25, 175, 450, 95);
-            ctx.strokeStyle = "#f2c249";
-            ctx.strokeRect(25, 175, 450, 95);
+            ctx.fillRect(25, 165, 470, 110);
+            ctx.strokeStyle = "#1c352a";
+            ctx.strokeRect(25, 165, 470, 110);
 
             ctx.fillStyle = "#f2c249";
-            ctx.font = "bold 16px Arial";
-            ctx.fillText(`Aciertos alcanzados: ${aciertos} de ${total}`, 45, 205);
+            ctx.font = "bold 14px Arial";
+            ctx.fillText(`• Ejercicios correctos asentados: ${aciertos} de ${total}`, 40, 195);
             
-            ctx.fillStyle = "#f87171"; // Tonalidad roja clara para errores
-            ctx.fillText(`Intentos erróneos: ${errores}`, 45, 230);
+            ctx.fillStyle = "#f87171";
+            ctx.fillText(`• Errores analizados en sesión: ${errores}`, 40, 225);
             
-            ctx.fillStyle = "#34d399"; // Tonalidad verde claro
-            ctx.fillText(`Porcentaje de efectividad: ${porcentaje}%`, 45, 255);
+            ctx.fillStyle = "#34d399";
+            ctx.fillText(`• Porcentaje de efectividad terminal: ${porcentaje}%`, 40, 255);
 
             ctx.fillStyle = "#657f71";
-            ctx.font = "bold 10px Courier New";
-            // Cadena encriptada/cruda compacta para el maestro
-            const rawRow = `DATA: ${timestamp.replace(',','')},${alumno.nombre},${alumno.grado},${alumno.grupo},Ac:${aciertos},Err:${errores},${porcentaje}%`;
-            ctx.fillText(rawRow, 25, 310);
+            ctx.font = "bold 9px Courier New";
+            const rawRow = `LOG: ${timestamp.replace(',','')},${alumno.nombre},${alumno.grado}-${alumno.grupo},Ac:${aciertos},Err:${errores},Eff:${porcentaje}%`;
+            ctx.fillText(rawRow, 25, 325);
 
             const dataURL = canvas.toDataURL("image/png");
             const imgElement = document.getElementById('img-resultado');
@@ -430,66 +560,58 @@
 
             document.getElementById('box-imagen-salida').classList.remove('hidden');
             
-            // Función opcional si ya configuraste Apps Script en el paso previo
+            // ENVÍO DE DATOS CORREGIDO: Ahora se inyectan las variables globales de forma explícita
             if (typeof enviarA_GoogleSheets === "function") {
                 enviarA_GoogleSheets({
                     fecha: timestamp.replace(',',''),
                     nombre: alumno.nombre,
                     grado: alumno.grado,
                     grupo: alumno.grupo,
+                    materia: materiaActual, // Variable global forzada
+                    tema: temaActual,       // Variable global forzada
                     aciertos: aciertos,
                     errores: errores,
                     porcentaje: porcentaje + "%",
-                    total: total
+                    error_ejercicio: ultimoErrorEnunciado // El enunciado guardado
                 });
             }
         }
 
         function bajarCSV() {
-            const aciertos = historial.filter(h => h.status === "CORRECTO").length;
-            const errores = historial.filter(h => h.status === "INCORRECTO").length;
-            const total = historial.length;
-            const porcentajeGeneral = total > 0 ? ((aciertos / total) * 100).toFixed(1) : 0;
-
             let csv = "data:text/csv;charset=utf-8,";
-            // Encabezados con las nuevas columnas solicitadas
-            csv += "Intento,Materia,Tema,Resultado,RespuestaAlumno,RespuestaCorrecta,ErroresAcumuladosEnSesion,PorcentajeEfectividadSesion\n";
+            csv += "Intento,Materia,Tema,Dificultad,Resultado,RespuestaAlumno,RespuestaCorrecta,EjercicioFallo\n";
             
-            historial.forEach((h, index) => {
-                // Cálculo progresivo de la efectividad fila por fila
-                const subHistorial = historial.slice(0, index + 1);
-                const subAciertos = subHistorial.filter(s => s.status === "CORRECTO").length;
-                const subErrores = subHistorial.filter(s => s.status === "INCORRECTO").length;
-                const subPorcentaje = ((subAciertos / subHistorial.length) * 100).toFixed(1);
-
-                csv += `${h.intento},"${h.materia}","${h.tema}",${h.status},${h.uRes},${h.cRes},${subErrores},${subPorcentaje}%\n`;
+            historial.forEach((h) => {
+                csv += `${h.intento},"${h.materia}","${h.tema}","${h.dificultad}",${h.status},${h.uRes},${h.cRes},"${h.enunciadoFallo.replace(/"/g, '""')}"\n`;
             });
 
-            const name = `${alumno.nombre}_${alumno.grado}_${alumno.grupo}_Reporte`.replace(/[\/\\*?:"<>|]/g, '_');
+            const name = `${alumno.nombre}_${alumno.grado}${alumno.grupo}_Métricas`.replace(/[\/\\*?:"<>|]/g, '_');
             const link = document.createElement("a");
             link.href = encodeURI(csv);
             link.download = `${name}.csv`;
             link.click();
         }
 
-        function reiniciarSesion() { if(confirm("¿Reiniciar la sesión?")) window.location.reload(); }
+        function reiniciarSesion() { if(confirm("¿Desea dar por terminada la sesión actual?")) window.location.reload(); }
+        
+        // FUNCIÓN RECEPTORA VINCULADA CORRECTAMENTE
         function enviarA_GoogleSheets(datos) {
-    // PEGA AQUÍ LA URL LARGA QUE COPIASTE DE GOOGLE APPS SCRIPT
-    const urlWebApp = "https://script.google.com/macros/s/AKfycbxeTfTqj68UHB_DE5-5gqxdInDQRk1oZrPdILq2b6F9q1_kV_ntmgH0V_INrsEhUM4S/exec";
+            // REEMPLAZA ESTA URL POR TU URL REAL DE GOOGLE APPS SCRIPT QUE TERMINA EN /exec
+            const urlWebApp = "https://script.google.com/macros/s/AKfycbxeTfTqj68UHB_DE5-5gqxdInDQRk1oZrPdILq2b6F9q1_kV_ntmgH0V_INrsEhUM4S/exec";
 
-    fetch(urlWebApp, {
-        method: "POST",
-        mode: "no-cors", 
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(datos)
-    })
-    .then(() => {
-        console.log("Datos sincronizados con la base de datos del profesor.");
-    })
-    .catch(err => {
-        console.error("Error de red al sincronizar:", err);
-    });
-}
+            fetch(urlWebApp, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            })
+            .then(() => {
+                console.log("Datos del alumno enviados con éxito.");
+            })
+            .catch(err => {
+                console.error("Error de sincronización de red:", err);
+            });
+        }
     </script>
 </body>
 </html>
