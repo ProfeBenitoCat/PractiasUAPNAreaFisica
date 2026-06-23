@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PractiMate — Herramienta de práctica para Física y Matemáticas</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body {
+            background-color: #0b1511;
+            background-image: 
+                linear-gradient(rgba(25, 40, 32, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(25, 40, 32, 0.3) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        .panel-dark {
+            background-color: #11221a;
+            border: 1px solid #1c352a;
+        }
+        .input-dark {
+            background-color: #0c1813;
+            border: 1px solid #1a3227;
+            color: #e2e8f0;
+        }
+        .input-dark:focus {
+            border-color: #f2c249;
+            outline: none;
+        }
+        .btn-gold {
+            background-color: #f2c249;
+            color: #11221a;
+        }
+        .btn-gold:hover {
+            background-color: #dbad3b;
+        }
+        .btn-tab-active {
+            border: 1px solid #f2c249;
+            color: #f2c249;
+            background-color: rgba(242, 194, 73, 0.05);
+        }
+        .btn-tab-inactive {
+            border: 1px solid #1c352a;
+            color: #8da297;
+        }
+        .btn-tab-inactive:hover {
+            border-color: #2c4f3f;
+            color: #cbd5e1;
+        }
+        .btn-subtema {
+            border: 1px solid #1c352a;
+            color: #a3b8ad;
+            background-color: rgba(12, 24, 19, 0.5);
+        }
+        .btn-subtema:hover {
+            border-color: #f2c249;
+            color: #f2c249;
+        }
+    </style>
+</head>
+<body class="text-slate-200 min-h-screen flex flex-col justify-between font-sans antialiased">
+
+    <header class="max-w-5xl w-full mx-auto px-4 pt-6 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="bg-[#f2c249]/10 p-2 rounded-xl border border-[#f2c249]/30 flex items-center justify-center">
+                <svg class="w-6 h-6 text-[#f2c249]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 21a3 3 0 003-3v-4.5a3 3 0 00-3-3h-1.5V9a3 3 0 00-3-3h-3V3h1.5a.75.75 0 000-1.5h-9a.75.75 0 000 1.5H9v3H6a3 3 0 00-3 3v4.5H1.5a3 3 0 00-3 3V18a3 3 0 003 3h18zM9 7.5h6v1.5H9V7.5z" />
+                </svg>
+            </div>
+            <span class="text-xl font-bold tracking-tight text-slate-100">Practi<span class="text-[#f2c249]">Mate</span></span>
+        </div>
+        <button onclick="reiniciarSesion()" class="text-xs font-medium text-slate-400 hover:text-slate-200 border border-[#1c352a] px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition bg-[#11221a]/50">
+            🔄 Nueva sesión
+        </button>
+    </header>
+
+    <main class="max-w-4xl w-full mx-auto p-4 flex-grow flex flex-col justify-center my-4">
+
+        <div id="pantalla-registro" class="panel-dark rounded-2xl p-8 max-w-2xl w-full mx-auto shadow-2xl">
+            <div class="flex flex-col items-center text-center mb-8">
+                <span class="text-4xl text-[#f2c249] mb-3">🎓</span>
+                <h2 class="text-2xl font-bold text-slate-100">Registro del estudiante</h2>
+                <p class="text-sm text-slate-400 mt-1">Ingresa tus datos para comenzar la práctica</p>
+            </div>
+
+            <div class="space-y-5">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Nombre completo</label>
+                    <input type="text" id="alumno-nombre" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-medium" placeholder="Ej: Jesús Campos">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Grado</label>
+                        <input type="text" id="alumno-grado" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-medium" placeholder="Ej: 2do">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Grupo</label>
+                        <input type="text" id="alumno-grupo" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-medium" placeholder="Ej: B">
+                    </div>
+                </div>
+                <button onclick="procesarRegistro()" class="w-full btn-gold font-bold py-3.5 px-4 rounded-xl transition shadow-lg text-sm cursor-pointer">
+                    ➔ Comenzar práctica
+                </button>
+            </div>
+        </div>
+
+        <div id="pantalla-principal" class="hidden w-full space-y-6">
+            
+            <div class="w-full bg-[#11221a] border border-[#1c352a] px-5 py-3 rounded-xl flex flex-wrap items-center gap-4 text-sm text-slate-300 justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2 text-slate-100 font-semibold">
+                        <span class="text-[#f2c249]">👤</span> <span id="lbl-nombre">---</span>
+                    </div>
+                    <div class="h-4 w-[1px] bg-[#1c352a] hidden sm:block"></div>
+                    <div>Grado: <span id="lbl-grado" class="font-bold text-slate-100">---</span></div>
+                    <div class="h-4 w-[1px] bg-[#1c352a] hidden sm:block"></div>
+                    <div>Grupo: <span id="lbl-grupo" class="font-bold text-slate-100">---</span></div>
+                </div>
+                
+                <div class="flex items-center gap-3 bg-[#0c1813] px-3 py-1.5 rounded-lg border border-[#1a3227] text-xs">
+                    <div>Ac.: <span id="live-aciertos" class="text-emerald-400 font-bold">0</span></div>
+                    <div class="text-slate-600">|</div>
+                    <div>Err.: <span id="live-errores" class="text-rose-400 font-bold">0</span></div>
+                    <div class="text-slate-600">|</div>
+                    <div>Efectividad: <span id="live-porcentaje" class="text-[#f2c249] font-bold">0%</span></div>
+                </div>
+            </div>
+
+            <div class="flex gap-4">
+                <button id="tab-matematicas" onclick="cambiarMateria('Matematicas')" class="btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm cursor-pointer">
+                    <span>√×</span> Matematicas
+                </button>
+                <button id="tab-fisica" onclick="cambiarMateria('Fisica')" class="btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm cursor-pointer">
+                    <span>⚙</span> Fisica
+                </button>
+            </div>
+
+            <div id="subtemas-matematicas" class="hidden flex-wrap gap-2">
+                <button onclick="cargarProblema('Ecuaciones cuadraticas')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">𝗫² Ecuaciones cuadraticas</button>
+                <button onclick="cargarProblema('Sistemas lineales')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">⊞ Sistemas lineales</button>
+                <button onclick="cargarProblema('Derivadas')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">📈 Derivadas</button>
+            </div>
+
+            <div id="subtemas-fisica" class="hidden flex-wrap gap-2">
+                <button onclick="cargarProblema('MRU')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">🚘 MRU</button>
+                <button onclick="cargarProblema('Ley de Newton')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">🧳 Ley de Newton</button>
+                <button onclick="cargarProblema('Ley de Ohm')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">⚡ Ley de Ohm</button>
+            </div>
+
+            <div id="espacio-trabajo" class="panel-dark rounded-2xl p-8 min-h-[250px] flex flex-col items-center justify-center text-center">
+                <div id="vista-placeholder" class="space-y-2">
+                    <h3 class="text-lg font-bold text-slate-100">Selecciona un tema</h3>
+                    <p class="text-xs text-slate-400">Elige el área matemática o física para desplegar ejercicios dinámicos.</p>
+                </div>
+
+                <div id="vista-ejercicio" class="hidden w-full text-left space-y-4">
+                    <div class="flex justify-between items-center border-b border-[#1c352a] pb-2">
+                        <h4 id="txt-titulo-tema" class="text-sm font-bold text-[#f2c249]">Tema</h4>
+                        <span class="text-xs font-semibold text-slate-400 bg-[#0c1813] px-3 py-1 rounded-md border border-[#1a3227]">Ejercicio global N° <span id="txt-num-intento">1</span></span>
+                    </div>
+                    <p id="txt-enunciado" class="text-sm text-slate-200 leading-relaxed font-medium">Cargando enunciado...</p>
+                    
+                    <div class="space-y-3">
+                        <div class="flex gap-3">
+                            <input type="number" id="input-respuesta" step="any" class="w-full input-dark rounded-xl px-4 py-3 text-sm font-semibold" placeholder="Escribe tu resultado aquí">
+                            <span id="txt-flux-unidad" class="inline-flex items-center px-4 rounded-xl bg-[#0c1813] border border-[#1a3227] text-slate-400 font-bold text-xs uppercase"></span>
+                        </div>
+                        <button onclick="evaluar()" class="w-full btn-gold font-bold py-3 rounded-xl transition text-sm cursor-pointer">
+                            ✓ Enviar respuesta
+                        </button>
+                    </div>
+                </div>
+
+                <div id="vista-retro" class="hidden w-full text-left space-y-3 pt-3 border-t border-[#1c352a]">
+                    <div id="box-status" class="p-3 rounded-xl font-bold text-xs"></div>
+                    <div id="box-pasos" class="bg-[#0c1813] border border-[#1a3227] rounded-xl p-4 space-y-2 text-xs text-slate-300"></div>
+                    <button onclick="avanzarSiguiente()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium py-2 rounded-xl transition text-xs">
+                        Siguiente ejercicio ➔
+                    </button>
+                </div>
+            </div>
+
+            <div id="panel-reportes" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+                <div class="panel-dark rounded-xl p-5 space-y-2">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Desglose del Historial</h4>
+                    <div class="max-h-40 overflow-y-auto space-y-2" id="lista-historial"></div>
+                </div>
+
+                <div class="panel-dark rounded-xl p-5 flex flex-col items-center justify-center space-y-3">
+                    <h4 class="text-xs font-bold uppercase text-slate-400 tracking-wider">Finalizar sesión</h4>
+                    
+                    <button onclick="bajarCSV()" class="w-full bg-[#1c352a] hover:bg-[#254637] text-slate-300 text-xs py-2 rounded-xl border border-[#2b5240] font-medium">
+                        📥 Descargar archivo CSV (Con porcentajes)
+                    </button>
+                    
+                    <button onclick="generarValeImagen()" class="w-full bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 text-xs py-2 rounded-xl border border-amber-500/40 font-bold">
+                        🖼 Generar vale de aciertos (Imagen)
+                    </button>
+
+                    <canvas id="canvas-reporte" width="500" height="340" class="hidden"></canvas>
+                    <div id="box-imagen-salida" class="hidden flex flex-col items-center space-y-2 mt-2">
+                        <p class="text-[10px] text-amber-400 text-center">Deja presionado sobre la imagen para Guardar en Fotos o toma un screenshot:</p>
+                        <img id="img-resultado" class="border border-amber-500/30 rounded-xl max-w-full h-auto shadow-xl" alt="Ticket de Evidencia">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="text-center py-4 border-t border-[#13251d] text-xs text-slate-500">
+        PractiMate — Herramienta de práctica para Física y Matemáticas
+    </footer>
+
+    <script>
+        let alumno = { nombre: "", grado: "", grupo: "" };
+        let materiaActual = "", temaActual = "", problemaActual = null;
+        let totalIntentos = 1, historial = [];
+
+        function procesarRegistro() {
+            const nombre = document.getElementById('alumno-nombre').value.trim();
+            const grado = document.getElementById('alumno-grado').value.trim();
+            const grupo = document.getElementById('alumno-grupo').value.trim();
+            if (!nombre || !grado || !grupo) return alert("Rellena todos los campos.");
+            
+            alumno = { nombre, grado, grupo };
+            document.getElementById('lbl-nombre').innerText = alumno.nombre;
+            document.getElementById('lbl-grado').innerText = alumno.grado;
+            document.getElementById('lbl-grupo').innerText = alumno.grupo;
+
+            document.getElementById('pantalla-registro').classList.add('hidden');
+            document.getElementById('pantalla-principal').classList.remove('hidden');
+        }
+
+        function cambiarMateria(materia) {
+            materiaActual = materia;
+            const tabMat = document.getElementById('tab-matematicas');
+            const tabFis = document.getElementById('tab-fisica');
+
+            if (materia === 'Matematicas') {
+                tabMat.className = "btn-tab-active px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                tabFis.className = "btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                document.getElementById('subtemas-matematicas').classList.replace('hidden', 'flex');
+                document.getElementById('subtemas-fisica').classList.replace('flex', 'hidden');
+            } else {
+                tabFis.className = "btn-tab-active px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                tabMat.className = "btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                document.getElementById('subtemas-fisica').classList.replace('hidden', 'flex');
+                document.getElementById('subtemas-matematicas').classList.replace('flex', 'hidden');
+            }
+            document.getElementById('vista-placeholder').classList.remove('hidden');
+            document.getElementById('vista-ejercicio').classList.add('hidden');
+            document.getElementById('vista-retro').classList.add('hidden');
+        }
+
+        const motoresProblemas = {
+            "Ley de Ohm": () => {
+                const r = Math.floor(Math.random() * 30) + 5;
+                const i = Math.floor(Math.random() * 6) + 1;
+                return {
+                    enunciado: `Un circuito tiene una resistencia de ${r} Ohmios y una intensidad de corriente de ${i} Amperios. ¿Cuál es el voltaje aplicado?`,
+                    solucion: r * i, unidad: "V",
+                    retro: { tipo: "fisica", datos: `R = ${r} Ω, I = ${i} A`, incognita: `V = ?`, formula: `V = I · R`, sustitucion: `V = ${i} A × ${r} Ω`, resultado: `${r*i} V` }
+                };
+            },
+            "MRU": () => {
+                const v = Math.floor(Math.random() * 20) + 5;
+                const t = Math.floor(Math.random() * 10) + 2;
+                return {
+                    enunciado: `Un cuerpo se desplaza a una velocidad constante de ${v} m/s durante ${t} segundos. Encuentra la distancia total recorrida.`,
+                    solucion: v * t, unidad: "m",
+                    retro: { tipo: "fisica", datos: `v = ${v} m/s, t = ${t} s`, incognita: `d = ?`, formula: `d = v · t`, sustitucion: `d = ${v} m/s × ${t} s`, resultado: `${v*t} m` }
+                };
+            },
+            "Ecuaciones cuadraticas": () => {
+                const r = Math.floor(Math.random() * 10) + 2;
+                return {
+                    enunciado: `Resuelve para la raíz positiva la siguiente expresión: x² - ${r*r} = 0.`,
+                    solucion: r, unidad: "",
+                    retro: { tipo: "matematicas", pasos: [`1. Pasar término constante: x² = ${r*r}`, `2. Aplicar raíz cuadrada: x = √(${r*r})`, `3. Resultado: x = ${r}`] }
+                };
+            }
+        };
+
+        function cargarProblema(tema) {
+            temaActual = tema;
+            document.getElementById('vista-placeholder').classList.add('hidden');
+            document.getElementById('vista-retro').classList.add('hidden');
+            
+            const motor = motoresProblemas[tema] || (() => {
+                const a = Math.floor(Math.random() * 10) + 1;
+                return { enunciado: `Calcular k para k - ${a} = 10.`, solucion: a + 10, unidad: "", retro: { tipo: "matematicas", pasos: [`Sumar para despejar de forma lineal: ${a+10}`] } };
+            });
+
+            problemaActual = motor();
+            document.getElementById('txt-titulo-tema').innerText = `${materiaActual} — ${temaActual}`;
+            document.getElementById('txt-enunciado').innerText = problemaActual.enunciado;
+            document.getElementById('txt-flux-unidad').innerText = problemaActual.unidad;
+            document.getElementById('txt-num-intento').innerText = totalIntentos;
+            document.getElementById('input-respuesta').value = "";
+            document.getElementById('vista-ejercicio').classList.remove('hidden');
+        }
+
+        function evaluar() {
+            const rawIn = document.getElementById('input-respuesta').value;
+            if(!rawIn) return alert("Introduce un valor numérico.");
+            const respUser = parseFloat(rawIn);
+            const val = Math.abs(respUser - problemaActual.solucion) <= 0.05;
+
+            historial.push({
+                intento: totalIntentos, materia: materiaActual, tema: temaActual,
+                status: val ? "CORRECTO" : "INCORRECTO", uRes: respUser, cRes: problemaActual.solucion
+            });
+
+            // Actualizar Métricas en Tiempo Real (Panel Superior)
+            actualizarMetricasLive();
+            actualizarHistorialUI();
+            document.getElementById('panel-reportes').classList.remove('hidden');
+
+            const statusBox = document.getElementById('box-status');
+            const pasosBox = document.getElementById('box-pasos');
+
+            if(val) {
+                statusBox.className = "bg-emerald-950/50 border border-emerald-800/40 text-emerald-400 p-3 rounded-xl font-bold";
+                statusBox.innerHTML = "✔ ¡Correcto!";
+                pasosBox.innerHTML = "<p class='text-slate-500'>Procedimiento óptimo.</p>";
+            } else {
+                statusBox.className = "bg-rose-950/50 border border-rose-800/40 text-rose-400 p-3 rounded-xl font-bold";
+                statusBox.innerHTML = `❌ Incorrecto (Tu respuesta: ${respUser})`;
+                
+                if(problemaActual.retro.tipo === "fisica") {
+                    pasosBox.innerHTML = `
+                        <div class='space-y-1'>
+                            <div><b>Datos:</b> ${problemaActual.retro.datos}</div>
+                            <div><b>Incógnita:</b> ${problemaActual.retro.incognita}</div>
+                            <div><b>Fórmula:</b> ${problemaActual.retro.formula}</div>
+                            <div><b>Sustitución:</b> ${problemaActual.retro.sustitucion}</div>
+                            <div class='text-emerald-400'><b>Resultado:</b> ${problemaActual.retro.resultado}</div>
+                        </div>`;
+                } else {
+                    pasosBox.innerHTML = problemaActual.retro.pasos.map(p => `<p>${p}</p>`).join("");
+                }
+            }
+            document.getElementById('vista-retro').classList.remove('hidden');
+            totalIntentos++;
+        }
+
+        function avanzarSiguiente() { cargarProblema(temaActual); }
+
+        function actualizarMetricasLive() {
+            const aciertos = historial.filter(h => h.status === "CORRECTO").length;
+            const errores = historial.filter(h => h.status === "INCORRECTO").length;
+            const total = historial.length;
+            const porcentaje = total > 0 ? ((aciertos / total) * 100).toFixed(1) : 0;
+
+            document.getElementById('live-aciertos').innerText = aciertos;
+            document.getElementById('live-errores').innerText = errores;
+            document.getElementById('live-porcentaje').innerText = `${porcentaje}%`;
+        }
+
+        function actualizarHistorialUI() {
+            const container = document.getElementById('lista-historial');
+            container.innerHTML = "";
+            [...historial].reverse().forEach(h => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center text-xs p-2 rounded-lg bg-[#0c1813] border border-[#1a3227]">
+                        <span class="text-slate-400">Examen #${h.intento} - ${h.tema}</span>
+                        <span class="${h.status==='CORRECTO'?'text-emerald-400':'text-rose-400'} font-bold">${h.status}</span>
+                    </div>`;
+            });
+        }
+
+        function generarValeImagen() {
+            const canvas = document.getElementById('canvas-reporte');
+            const ctx = canvas.getContext('2d');
+            const aciertos = historial.filter(h => h.status === "CORRECTO").length;
+            const errores = historial.filter(h => h.status === "INCORRECTO").length;
+            const total = historial.length;
+            const porcentaje = total > 0 ? ((aciertos / total) * 100).toFixed(1) : 0;
+            const timestamp = new Date().toLocaleString('es-MX', { hour12: false });
+
+            ctx.fillStyle = "#11221a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = "#f2c249";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+
+            ctx.fillStyle = "#f2c249";
+            ctx.font = "bold 20px Arial";
+            ctx.fillText("PRACTIMATE — VALE DE EVALUACIÓN", 25, 45);
+
+            ctx.fillStyle = "#8da297";
+            ctx.font = "12px Arial";
+            ctx.fillText(`Emisión: ${timestamp}`, 25, 70);
+
+            ctx.strokeStyle = "#1c352a";
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(25, 85); ctx.lineTo(475, 85); ctx.stroke();
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 15px Arial";
+            ctx.fillText(`Estudiante: ${alumno.nombre}`, 25, 115);
+            ctx.fillText(`Grado: ${alumno.grado}`, 25, 145);
+            ctx.fillText(`Grupo: ${alumno.grupo}`, 160, 145);
+
+            // Bloque de Métricas Completo en el Canvas
+            ctx.fillStyle = "rgba(242, 194, 73, 0.08)";
+            ctx.fillRect(25, 175, 450, 95);
+            ctx.strokeStyle = "#f2c249";
+            ctx.strokeRect(25, 175, 450, 95);
+
+            ctx.fillStyle = "#f2c249";
+            ctx.font = "bold 16px Arial";
+            ctx.fillText(`Aciertos alcanzados: ${aciertos} de ${total}`, 45, 205);
+            
+            ctx.fillStyle = "#f87171"; // Tonalidad roja clara para errores
+            ctx.fillText(`Intentos erróneos: ${errores}`, 45, 230);
+            
+            ctx.fillStyle = "#34d399"; // Tonalidad verde claro
+            ctx.fillText(`Porcentaje de efectividad: ${porcentaje}%`, 45, 255);
+
+            ctx.fillStyle = "#657f71";
+            ctx.font = "bold 10px Courier New";
+            // Cadena encriptada/cruda compacta para el maestro
+            const rawRow = `DATA: ${timestamp.replace(',','')},${alumno.nombre},${alumno.grado},${alumno.grupo},Ac:${aciertos},Err:${errores},${porcentaje}%`;
+            ctx.fillText(rawRow, 25, 310);
+
+            const dataURL = canvas.toDataURL("image/png");
+            const imgElement = document.getElementById('img-resultado');
+            imgElement.src = dataURL;
+
+            document.getElementById('box-imagen-salida').classList.remove('hidden');
+            
+            // Función opcional si ya configuraste Apps Script en el paso previo
+            if (typeof enviarA_GoogleSheets === "function") {
+                enviarA_GoogleSheets({
+                    fecha: timestamp.replace(',',''),
+                    nombre: alumno.nombre,
+                    grado: alumno.grado,
+                    grupo: alumno.grupo,
+                    aciertos: aciertos,
+                    errores: errores,
+                    porcentaje: porcentaje + "%",
+                    total: total
+                });
+            }
+        }
+
+        function bajarCSV() {
+            const aciertos = historial.filter(h => h.status === "CORRECTO").length;
+            const errores = historial.filter(h => h.status === "INCORRECTO").length;
+            const total = historial.length;
+            const porcentajeGeneral = total > 0 ? ((aciertos / total) * 100).toFixed(1) : 0;
+
+            let csv = "data:text/csv;charset=utf-8,";
+            // Encabezados con las nuevas columnas solicitadas
+            csv += "Intento,Materia,Tema,Resultado,RespuestaAlumno,RespuestaCorrecta,ErroresAcumuladosEnSesion,PorcentajeEfectividadSesion\n";
+            
+            historial.forEach((h, index) => {
+                // Cálculo progresivo de la efectividad fila por fila
+                const subHistorial = historial.slice(0, index + 1);
+                const subAciertos = subHistorial.filter(s => s.status === "CORRECTO").length;
+                const subErrores = subHistorial.filter(s => s.status === "INCORRECTO").length;
+                const subPorcentaje = ((subAciertos / subHistorial.length) * 100).toFixed(1);
+
+                csv += `${h.intento},"${h.materia}","${h.tema}",${h.status},${h.uRes},${h.cRes},${subErrores},${subPorcentaje}%\n`;
+            });
+
+            const name = `${alumno.nombre}_${alumno.grado}_${alumno.grupo}_Reporte`.replace(/[\/\\*?:"<>|]/g, '_');
+            const link = document.createElement("a");
+            link.href = encodeURI(csv);
+            link.download = `${name}.csv`;
+            link.click();
+        }
+
+        function reiniciarSesion() { if(confirm("¿Reiniciar la sesión?")) window.location.reload(); }
+        function enviarA_GoogleSheets(datos) {
+    // PEGA AQUÍ LA URL LARGA QUE COPIASTE DE GOOGLE APPS SCRIPT
+    const urlWebApp = "https://script.google.com/macros/s/AKfycbxeTfTqj68UHB_DE5-5gqxdInDQRk1oZrPdILq2b6F9q1_kV_ntmgH0V_INrsEhUM4S/exec";
+
+    fetch(urlWebApp, {
+        method: "POST",
+        mode: "no-cors", 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+    })
+    .then(() => {
+        console.log("Datos sincronizados con la base de datos del profesor.");
+    })
+    .catch(err => {
+        console.error("Error de red al sincronizar:", err);
+    });
+}
+    </script>
+</body>
+</html>
