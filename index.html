@@ -118,11 +118,8 @@
                 </button>
             </div>
 
-            <div id="subtemas-matematicas" class="hidden flex-wrap gap-2">
-                </div>
-
-            <div id="subtemas-fisica" class="hidden flex-wrap gap-2">
-                </div>
+            <div id="subtemas-matematicas" class="hidden flex-wrap gap-2"></div>
+            <div id="subtemas-fisica" class="hidden flex-wrap gap-2"></div>
 
             <div id="espacio-trabajo" class="panel-dark rounded-2xl p-8 min-h-[250px] flex flex-col items-center justify-center text-center">
                 <div id="vista-placeholder" class="space-y-2">
@@ -194,10 +191,296 @@
         let totalIntentos = 1, historial = [];
         let ultimoErrorEnunciado = "Ninguno";
         
-        // Variables globales del motor JSON
         let bancoDeProblemas = [];
         let problemaActual = null;
         let respuestaCorrectaCalculada = null;
 
-        // Carga inicial del archivo mediante Fetch API al abrir la web
         function cargarBancoDeProblemas() {
+            fetch('banco_problemas.json')
+                .then(response => {
+                    if (!response.ok) throw new Error("No se pudo ubicar el archivo banco_problemas.json");
+                    return response.json();
+                })
+                .then(data => {
+                    bancoDeProblemas = data;
+                    console.log("Banco JSON enlazado con éxito. Ítems cargados: " + data.length);
+                    renderizarSubtemasDinamicos();
+                })
+                .catch(error => {
+                    console.error("Inconveniente al mapear el JSON externo:", error);
+                });
+        }
+
+        function renderizarSubtemasDinamicos() {
+            const matContainer = document.getElementById('subtemas-matematicas');
+            const fisContainer = document.getElementById('subtemas-fisica');
+            
+            const temasMat = [...new Set(bancoDeProblemas.filter(p => p.materia === "Matematicas").map(p => p.tema))];
+            const temasFis = [...new Set(bancoDeProblemas.filter(p => p.materia === "Fisica").map(p => p.tema))];
+
+            matContainer.innerHTML = temasMat.map(tema => `<button onclick="cargarProblema('${tema}')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">${tema}</button>`).join("");
+            fisContainer.innerHTML = temasFis.map(tema => `<button onclick="cargarProblema('${tema}')" class="btn-subtema text-xs font-medium px-4 py-2 rounded-xl transition">${tema}</button>`).join("");
+        }
+
+        // AGREGADA DE NUEVO: Función para procesar los datos de entrada del estudiante
+        function procesarRegistro() {
+            const nombre = document.getElementById('alumno-nombre').value.trim();
+            const grado = document.getElementById('alumno-grado').value.trim();
+            const grupo = document.getElementById('alumno-grupo').value.trim();
+            const dificultad = document.getElementById('alumno-dificultad').value;
+            if (!nombre || !grado || !grupo) return alert("Por favor complete todos los campos de registro.");
+            
+            alumno = { nombre, grado, grupo, dificultad };
+            document.getElementById('lbl-nombre').innerText = alumno.nombre;
+            document.getElementById('lbl-grado').innerText = alumno.grado;
+            document.getElementById('lbl-grupo').innerText = alumno.grupo;
+            document.getElementById('live-dificultad').value = alumno.dificultad;
+
+            document.getElementById('pantalla-registro').classList.add('hidden');
+            document.getElementById('pantalla-principal').classList.remove('hidden');
+        }
+
+        function cambiarDificultadLive() {
+            alumno.dificultad = document.getElementById('live-dificultad').value;
+            if(temaActual) cargarProblema(temaActual);
+        }
+
+        function cambiarMateria(materia) {
+            materiaActual = materia;
+            const tabMat = document.getElementById('tab-matematicas');
+            const tabFis = document.getElementById('tab-fisica');
+
+            if (materia === 'Matematicas') {
+                tabMat.className = "btn-tab-active px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                tabFis.className = "btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                document.getElementById('subtemas-matematicas').classList.replace('hidden', 'flex');
+                document.getElementById('subtemas-fisica').classList.replace('flex', 'hidden');
+            } else {
+                tabFis.className = "btn-tab-active px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                tabMat.className = "btn-tab-inactive px-6 py-2.5 rounded-xl font-bold flex items-center gap-2 transition text-sm";
+                document.getElementById('subtemas-fisica').classList.replace('hidden', 'flex');
+                document.getElementById('subtemas-matematicas').classList.replace('flex', 'hidden');
+            }
+            document.getElementById('vista-placeholder').classList.remove('hidden');
+            document.getElementById('vista-ejercicio').classList.add('hidden');
+            document.getElementById('vista-retro').classList.add('hidden');
+        }
+
+        function calcularValorAleatorio(config) {
+            const factor = Math.pow(10, config.decimales);
+            const num = Math.random() * (config.max - config.min) + config.min;
+            return Math.round(num * factor) / factor;
+        }
+
+        function cargarProblema(tema) {
+            temaActual = tema;
+            document.getElementById('vista-placeholder').classList.add('hidden');
+            document.getElementById('vista-retro').classList.add('hidden');
+
+            let opciones = bancoDeProblemas.filter(p => p.tema === tema && p.dificultad === alumno.dificultad);
+            if(opciones.length === 0) opciones = bancoDeProblemas.filter(p => p.tema === tema);
+            if(opciones.length === 0) return alert("No hay plantillas disponibles para este tema.");
+
+            const plantillaSeleccionada = opciones[Math.floor(Math.random() * opciones.length)];
+
+            const v1 = calcularValorAleatorio(plantillaSeleccionada.variables.v1);
+            const v2 = calcularValorAleatorio(plantillaSeleccionada.variables.v2);
+
+            problemaActual = JSON.parse(JSON.stringify(plantillaSeleccionada));
+            problemaActual.valoresSorteados = { v1, v2 };
+
+            const formulaEvaluable = problemaActual.formula_solucion.replace(/v1/g, v1).replace(/v2/g, v2);
+            respuestaCorrectaCalculada = Number(eval(formulaEvaluable).toFixed(2));
+            problemaActual.solucion = respuestaCorrectaCalculada;
+
+            let enunciadoFinal = problemaActual.enunciado_plantilla;
+            enunciadoFinal = enunciadoFinal.replace(/{v1}/g, v1).replace(/{v2}/g, v2);
+            problemaActual.enunciado = enunciadoFinal;
+
+            document.getElementById('txt-titulo-tema').innerText = `${materiaActual} — ${temaActual} [Nivel ${alumno.dificultad}]`;
+            document.getElementById('txt-enunciado').innerText = enunciadoFinal;
+            document.getElementById('txt-flux-unidad').innerText = materiaActual === "Fisica" ? "U" : "";
+            document.getElementById('txt-num-intento').innerText = totalIntentos;
+            
+            document.getElementById('input-respuesta').value = "";
+            document.getElementById('input-respuesta').disabled = false;
+            document.getElementById('btn-comprobar').disabled = false;
+            document.getElementById('vista-ejercicio').classList.remove('hidden');
+        }
+
+        function evaluar() {
+            const rawIn = document.getElementById('input-respuesta').value;
+            if(!rawIn) return alert("Por favor, ingrese un valor de respuesta válido.");
+            
+            document.getElementById('btn-comprobar').disabled = true;
+            document.getElementById('input-respuesta').disabled = true;
+
+            const respUser = parseFloat(rawIn);
+            const val = Math.abs(respUser - respuestaCorrectaCalculada) <= 0.5;
+
+            if(!val) {
+                ultimoErrorEnunciado = `|${temaActual}| ${problemaActual.enunciado}`;
+            }
+
+            historial.push({
+                intento: totalIntentos, materia: materiaActual, tema: temaActual, dificultad: alumno.dificultad,
+                status: val ? "CORRECTO" : "INCORRECTO", uRes: respUser, cRes: respuestaCorrectaCalculada,
+                enunciadoFallo: !val ? problemaActual.enunciado : ""
+            });
+
+            actualizarMetricasLive();
+            actualizarHistorialUI();
+            document.getElementById('panel-reportes').classList.remove('hidden');
+
+            const statusBox = document.getElementById('box-status');
+            const pasosBox = document.getElementById('box-pasos');
+
+            if(val) {
+                statusBox.className = "bg-emerald-950/50 border border-emerald-800/40 text-emerald-400 p-3 rounded-xl font-bold text-center";
+                statusBox.innerHTML = "✔ ¡Respuesta Correcta! Excelente procedimiento.";
+                pasosBox.innerHTML = "<p class='text-slate-500 text-center'>El desarrollo numérico coincide perfectamente.</p>";
+            } else {
+                statusBox.className = "bg-rose-950/50 border border-rose-800/40 text-rose-400 p-3 rounded-xl font-bold";
+                statusBox.innerHTML = `❌ Incorrecto (Tu respuesta: ${respUser}). Analiza el procedimiento:`;
+                
+                const v1 = problemaActual.valoresSorteados.v1;
+                const v2 = problemaActual.valoresSorteados.v2;
+
+                if(problemaActual.retro.tipo === "fisica") {
+                    let datosF = problemaActual.retro.datos.replace(/{v1}/g, v1).replace(/{v2}/g, v2);
+                    let sustF = problemaActual.retro.sustitucion.replace(/{v1}/g, v1).replace(/{v2}/g, v2);
+
+                    pasosBox.innerHTML = `
+                        <div class='space-y-1 font-mono text-[11px]'>
+                            <div><b>Identificación:</b> ${datosF}</div>
+                            <div><b>Objetivo:</b> ${problemaActual.retro.incognita}</div>
+                            <div><b>Ecuación:</b> ${problemaActual.retro.formula}</div>
+                            <div><b>Sustitución:</b> ${sustF}</div>
+                            <div class='text-emerald-400 font-bold'><b>Valor Esperado:</b> ${respuestaCorrectaCalculada}</div>
+                        </div>`;
+                } else {
+                    pasosBox.innerHTML = problemaActual.retro.pasos.map(p => `<p class='font-mono text-[11px]'>${p.replace(/{v1}/g, v1).replace(/{v2}/g, v2)}</p>`).join("");
+                }
+            }
+            document.getElementById('vista-retro').classList.remove('hidden');
+            totalIntentos++;
+        }
+
+        function avanzarSiguiente() { cargarProblema(temaActual); }
+
+        function actualizarMetricasLive() {
+            const aciertos = historial.filter(h => h.status === "CORRECTO").length;
+            const errores = historial.filter(h => h.status === "INCORRECTO").length;
+            const total = historial.length;
+            const porcentaje = total > 0 ? ((aciertos / total) * 100).toFixed(1) : 0;
+
+            document.getElementById('live-aciertos').innerText = aciertos;
+            document.getElementById('live-errores').innerText = errores;
+            document.getElementById('live-porcentaje').innerText = `${porcentaje}%`;
+        }
+
+        function actualizarHistorialUI() {
+            const container = document.getElementById('lista-historial');
+            container.innerHTML = "";
+            [...historial].reverse().forEach(h => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center text-[11px] p-2 rounded-lg bg-[#0c1813] border border-[#1a3227]">
+                        <span class="text-slate-400">[${h.materia.substring(0,3)}] ${h.tema} (${h.dificultad})</span>
+                        <span class="${h.status==='CORRECTO'?'text-emerald-400':'text-rose-400'} font-bold">${h.status}</span>
+                    </div>`;
+            });
+        }
+
+        function generarValeImagen() {
+            const canvas = document.getElementById('canvas-reporte');
+            const ctx = canvas.getContext('2d');
+            const aciertos = historial.filter(h => h.status === "CORRECTO").length;
+            const errores = historial.filter(h => h.status === "INCORRECTO").length;
+            const total = historial.length;
+            const porcentaje = total > 0 ? ((aciertos / total) * 100).toFixed(1) : 0;
+            const timestamp = new Date().toLocaleString('es-MX', { hour12: false });
+
+            ctx.fillStyle = "#11221a";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = "#f2c249";
+            ctx.lineWidth = 4;
+            ctx.strokeRect(5, 5, canvas.width - 10, canvas.height - 10);
+
+            ctx.fillStyle = "#f2c249";
+            ctx.font = "bold 18px Arial";
+            ctx.fillText("UAS — VALE DE CONTROL DE APRENDIZAJE", 25, 45);
+
+            ctx.fillStyle = "#8da297";
+            ctx.font = "11px Arial";
+            ctx.fillText(`Generado el: ${timestamp} | Unidad Académica Navolato`, 25, 70);
+
+            ctx.strokeStyle = "#1c352a";
+            ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(25, 85); ctx.lineTo(495, 85); ctx.stroke();
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "bold 13px Arial";
+            ctx.fillText(`Estudiante: ${alumno.nombre}`, 25, 115);
+            ctx.fillText(`Grado: ${alumno.grado}`, 25, 140);
+            ctx.fillText(`Grupo: ${alumno.grupo}`, 150, 140);
+
+            ctx.fillRect(25, 165, 470, 110);
+            ctx.strokeStyle = "#1c352a";
+            ctx.strokeRect(25, 165, 470, 110);
+
+            ctx.fillStyle = "#f2c249";
+            ctx.font = "bold 14px Arial";
+            ctx.fillText(`• Ejercicios correctos asentados: ${aciertos} de ${total}`, 40, 195);
+            ctx.fillStyle = "#f87171";
+            ctx.fillText(`• Errores analizados en sesión: ${errores}`, 40, 225);
+            ctx.fillStyle = "#34d399";
+            ctx.fillText(`• Porcentaje de efectividad terminal: ${porcentaje}%`, 40, 255);
+
+            ctx.fillStyle = "#657f71";
+            ctx.font = "bold 9px Courier New";
+            const rawRow = `LOG: ${timestamp.replace(',','')},${alumno.nombre},${alumno.grado}-${alumno.grupo},Ac:${aciertos},Err:${errores},Eff:${porcentaje}%`;
+            ctx.fillText(rawRow, 25, 325);
+
+            document.getElementById('img-resultado').src = canvas.toDataURL("image/png");
+            document.getElementById('box-imagen-salida').classList.remove('hidden');
+            
+            if (typeof enviarA_GoogleSheets === "function") {
+                enviarA_GoogleSheets({
+                    fecha: timestamp.replace(',',''), nombre: alumno.nombre, grado: alumno.grado, grupo: alumno.grupo,
+                    materia: materiaActual, tema: temaActual, aciertos: aciertos, errores: errores,
+                    porcentaje: porcentaje + "%", error_ejercicio: ultimoErrorEnunciado
+                });
+            }
+        }
+
+        function bajarCSV() {
+            let csv = "data:text/csv;charset=utf-8,";
+            csv += "Intento,Materia,Tema,Dificultad,Resultado,RespuestaAlumno,RespuestaCorrecta,EjercicioFallo\n";
+            historial.forEach((h) => {
+                csv += `${h.intento},"${h.materia}","${h.tema}","${h.dificultad}",${h.status},${h.uRes},${h.cRes},"${h.enunciadoFallo.replace(/"/g, '""')}"\n`;
+            });
+            const name = `${alumno.nombre}_${alumno.grado}${alumno.grupo}_Métricas`.replace(/[\/\\*?:"<>|]/g, '_');
+            const link = document.createElement("a");
+            link.href = encodeURI(csv);
+            link.download = `${name}.csv`;
+            link.click();
+        }
+
+        function reiniciarSesion() { if(confirm("¿Desea reiniciar?")) window.location.reload(); }
+        
+        function enviarA_GoogleSheets(datos) {
+            const urlWebApp = "https://script.google.com/macros/s/AKfycbxeTfTqj68UHB_DE5-5gqxdInDQRk1oZrPdILq2b6F9q1_kV_ntmgH0V_INrsEhUM4S/exec";
+            fetch(urlWebApp, {
+                method: "POST",
+                mode: "no-cors", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            }).catch(err => console.error("Error Sheets:", err));
+        }
+
+        // Ejecución automática al cargar la página
+        window.onload = cargarBancoDeProblemas;
+    </script>
+</body>
+</html>
