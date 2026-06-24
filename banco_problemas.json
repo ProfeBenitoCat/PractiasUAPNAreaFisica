@@ -1,0 +1,28 @@
+[
+    {
+        "materia": "Fisica",
+        "tema": "Energía cinética",
+        "dificultad": "Facil",
+        "enunciado_plantilla": "Un coche con una masa de {v1} kg se mueve a una velocidad de {v2} m/s. Determina su energía cinética",
+        "variables": {
+            "v1": {
+                "min": 500,
+                "max": 2000,
+                "decimales": 0
+            },
+            "v2": {
+                "min": 5,
+                "max": 30,
+                "decimales": 0
+            }
+        },
+        "formula_solucion": "v1*v2*v2*0.5",
+        "retro": {
+            "tipo": "fisica",
+            "datos": "Datos: m = {v1} kg, v = {v2} m/s",
+            "incognita": "Incógnita: Ec = ?",
+            "formula": "Fórmula: Ec = 0.5 * m * v²",
+            "sustitucion": "Sustitución: Ec = 0.5 * {v1} * ({v2})²"
+        }
+    }
+]
