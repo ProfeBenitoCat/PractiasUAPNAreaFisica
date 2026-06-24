@@ -29,7 +29,7 @@
         "materia": "Fisica",
         "tema": "Energía potencial elástica",
         "dificultad": "Facil",
-        "enunciado_plantilla": "Una bolsa con mandado cuelga de un resorte con constante elástica k de {v1) N/m<sup>2</sup> , está estira al resorte {v2} m. Calcula la energía potencial elástica.",
+        "enunciado_plantilla": "Una bolsa con mandado cuelga de un resorte con constante elástica k de {v1} N/m, este se estira {v2} m. Calcula la energía potencial elástica.",
         "variables": {
             "v1": {
                 "min": 500,
@@ -45,9 +45,9 @@
         "formula_solucion": "0.5*v1*v2*v2",
         "retro": {
             "tipo": "fisica",
-            "datos": "Datos: k = {v1} N/m<sup>2</sup>, x = {v2}",
-            "incognita": "Incógnita: Epe=?",
-            "formula": "Fórmula: Epe = 0.5 · k · x<sup>2</sup>",
+            "datos": "Datos: k = {v1} N/m, x = {v2} m",
+            "incognita": "Incógnita: Epe = ?",
+            "formula": "Fórmula: Epe = 0.5 · k · x²",
             "sustitucion": "Sustitución: Epe = 0.5 * {v1} * ({v2})²"
         }
     }
