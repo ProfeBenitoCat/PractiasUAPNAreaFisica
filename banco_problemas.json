@@ -1,54 +1,68 @@
 [
     {
         "materia": "Fisica",
-        "tema": "Energía cinética",
-        "dificultad": "Facil",
-        "enunciado_plantilla": "Un coche con una masa de {v1} kg se mueve a una velocidad de {v2} m/s. Determina su energía cinética",
+        "tema": "Segunda Ley de Newton",
+        "dificultad": "Bajo",
+        "enunciado_plantilla": "Un objeto con una masa de {v1} kg es sometido a una fuerza que le produce una aceleración de {v2} m/s². ¿Cuál es la magnitud de la fuerza neta aplicada sobre el objeto?",
         "variables": {
             "v1": {
-                "min": 500,
-                "max": 2000,
+                "min": 5,
+                "max": 50,
                 "decimales": 0
             },
             "v2": {
-                "min": 5,
-                "max": 30,
-                "decimales": 0
-            }
-        },
-        "formula_solucion": "v1*v2*v2*0.5",
-        "retro": {
-            "tipo": "fisica",
-            "datos": "Datos: m = {v1} kg, v = {v2} m/s",
-            "incognita": "Incógnita: Ec = ?",
-            "formula": "Fórmula: Ec = 0.5 * m * v²",
-            "sustitucion": "Sustitución: Ec = 0.5 * {v1} * ({v2})²"
-        }
-    },
-    {
-        "materia": "Fisica",
-        "tema": "Energía potencial elástica",
-        "dificultad": "Facil",
-        "enunciado_plantilla": "Una bolsa con mandado cuelga de un resorte con constante elástica k de {v1} N/m, este se estira {v2} m. Calcula la energía potencial elástica.",
-        "variables": {
-            "v1": {
-                "min": 500,
-                "max": 2000,
+                "min": 1,
+                "max": 10,
+                "decimales": 1
+            },
+            "v3": {
+                "min": 0,
+                "max": 0,
                 "decimales": 0
             },
-            "v2": {
-                "min": 5,
-                "max": 30,
+            "v4": {
+                "min": 0,
+                "max": 0,
+                "decimales": 0
+            },
+            "v5": {
+                "min": 0,
+                "max": 0,
+                "decimales": 0
+            },
+            "v6": {
+                "min": 0,
+                "max": 0,
+                "decimales": 0
+            },
+            "v7": {
+                "min": 0,
+                "max": 0,
+                "decimales": 0
+            },
+            "v8": {
+                "min": 0,
+                "max": 0,
+                "decimales": 0
+            },
+            "v9": {
+                "min": 0,
+                "max": 0,
+                "decimales": 0
+            },
+            "v10": {
+                "min": 0,
+                "max": 0,
                 "decimales": 0
             }
         },
-        "formula_solucion": "0.5*v1*v2*v2",
+        "formula_solucion": "v1 * v2",
         "retro": {
             "tipo": "fisica",
-            "datos": "Datos: k = {v1} N/m, x = {v2} m",
-            "incognita": "Incógnita: Epe = ?",
-            "formula": "Fórmula: Epe = 0.5 · k · x²",
-            "sustitucion": "Sustitución: Epe = 0.5 * {v1} * ({v2})²"
+            "datos": "m = {v1} kg, a = {v2} m/s²",
+            "incognita": "F = ?",
+            "formula": "F = m · a",
+            "sustitucion": "F = {v1} kg · {v2} m/s²"
         }
     }
 ]
